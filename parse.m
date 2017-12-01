@@ -1,4 +1,4 @@
-function [p] = c_parse(m)
+function [p] = parse(m)
 
 % error checking stage wants only integer values between 0 and 127,
 % with at least two values
