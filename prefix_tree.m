@@ -1,4 +1,4 @@
-classdef Prefix_tree
+classdef Prefix_tree < handle
     
     properties
         
