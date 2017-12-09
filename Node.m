@@ -2,7 +2,7 @@ classdef Node < handle
     
     properties
         
-        note_value = [];
+        note_value;
         contin_list = [];
         children = [];
         
@@ -10,15 +10,29 @@ classdef Node < handle
     
     methods
         
-        % initializer
+        % initializers
         
-        function obj = Node(note_value, contin_list, children)
+        function obj = Node(varargin)
             
-            obj.note_value = note_value;
-            obj.contin_list = contin_list;
-            obj.children = children;
+            if nargin == 3
+                obj.note_value = varargin{1};
+                obj.contin_list = varargin{2};
+                obj.children = varargin{3};
+            else
+                obj.note_value = -1;
+                obj.contin_list = [];
+                obj.children = [];
+            end
             
         end
+        
+%         function obj = Node(note_value, contin_list, children)
+%             
+%             obj.note_value = note_value;
+%             obj.contin_list = contin_list;
+%             obj.children = children;
+%             
+%         end
         
         % equality testing function
         
@@ -30,7 +44,7 @@ classdef Node < handle
         
         % random continuation function
         
-        function [next] = rand_contin(obj)
+        function [next] = pick_contin(obj)
            
             i = randi(length(obj.contin_list));
             next = obj.contin_list(i);
@@ -50,6 +64,14 @@ classdef Node < handle
         function [obj] = add_child(obj, child_node)
             
             obj.children = [obj.children, child_node];
+            
+        end
+        
+        % has children function
+        
+        function [has] = has_children(obj)
+           
+            has = ~isempty(obj.children);
             
         end
         

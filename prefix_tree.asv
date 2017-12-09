@@ -11,7 +11,7 @@ classdef Prefix_tree
     
         % get prefixes from input
         
-        function [obj] = parse(obj, midi_input)
+        function [prefix] = parse(obj, midi_input)
 
             % error checking stage wants only integer values between 0 and 127,
             % with at least two values,
@@ -33,23 +33,22 @@ classdef Prefix_tree
                 contin_indices = ones(i,1) * i + 1 + overall;
                 prefix = [midi_input(i:-1:1),contin_indices];
 
-                new_nodes(size(prefix,1),1) = Node;
-                for j = size(prefix, 1):-1:1
+                new_nodes(length(prefix),1) = Node;
+                for j = length(prefix):-1:1
                     new_nodes(j).note_value = prefix(j,1);
                     new_nodes(j).add_contin(prefix(j,2));
-                    if j < size(prefix, 1)
+                    if j < length(prefix)
                        new_nodes(j).add_child(new_nodes(j+1));
                     end
                 end
                 
-                obj.add_input(new_nodes(1));
-                 clear new_nodes;
+                add_input(new_nodes(1));
             end
         end
         
         % add input to tree
         
-        function [obj] = add_input(obj, root_input)
+        function [] = add_input(obj, root_input)
             
             node_list = [];
             cur_nodes = obj.root_nodes;
@@ -57,19 +56,7 @@ classdef Prefix_tree
             i = 0;
             
             while cur_input.has_children
-                
                 i = i + 1;
-                
-                % if tree has no further nodes, add remaining input
-                if isempty(cur_nodes)
-                   if ~isempty(node_list)
-                        node_list(end).add_child(cur_input);
-                   else
-                        obj.root_nodes = [obj.root_nodes, cur_input];
-                   end 
-                   break
-                end
-                
                 for j = 1:length(cur_nodes)
                     
                     if cur_nodes(j).is_equal(cur_input)
@@ -91,7 +78,6 @@ classdef Prefix_tree
                 cur_input = cur_input.children(1);
             end
             
-            % handle case for cur_input has no children
             for j = 1:length(cur_nodes)
                     
                 if cur_nodes(j).is_equal(cur_input)
@@ -109,11 +95,12 @@ classdef Prefix_tree
                     end
                 end
             end
-
+            % handle case for cur_input is length 1
+            
             % add continuation indices to node_list
-            for k = 1:length(node_list)
-                node_list(k).add_contin(cur_input.contin_list(1));
-            end
+            
+            
+            
         end
         
     end
