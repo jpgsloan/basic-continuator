@@ -26,14 +26,6 @@ classdef Node < handle
             
         end
         
-%         function obj = Node(note_value, contin_list, children)
-%             
-%             obj.note_value = note_value;
-%             obj.contin_list = contin_list;
-%             obj.children = children;
-%             
-%         end
-        
         % equality testing function
         
         function [comp] = is_equal(obj, other_node)

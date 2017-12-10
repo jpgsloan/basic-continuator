@@ -13,16 +13,9 @@ classdef Prefix_tree < handle
         
         function [obj] = parse(obj, midi_input)
 
-            % error checking stage wants only integer values between 0 and 127,
-            % with at least two values,
-            % and needs m to be a column vector
-
-            % input 'm' for MIDI is MIDI pitch values already parsed from MIDI data
-
-            % output 'p' for prefixes is a multi-dimensional cell array
-
             prefix = [];
             overall = length(obj.training_input);
+            obj.training_input = [obj.training_input, midi_input];
 
             if size(midi_input,2) > size(midi_input,1)
                 midi_input = midi_input';
@@ -51,14 +44,16 @@ classdef Prefix_tree < handle
         
         function [obj] = add_input(obj, root_input)
             
-            node_list = [];
+            node_list = Node.empty;
             cur_nodes = obj.root_nodes;
             cur_input = root_input;
             i = 0;
+            hit_loop = false;
             
             while cur_input.has_children
                 
                 i = i + 1;
+                hit_loop = true;
                 
                 % if tree has no further nodes, add remaining input
                 if isempty(cur_nodes)
@@ -91,21 +86,24 @@ classdef Prefix_tree < handle
                 cur_input = cur_input.children(1);
             end
             
-            % handle case for cur_input has no children
-            for j = 1:length(cur_nodes)
-                    
-                if cur_nodes(j).is_equal(cur_input)
-                    node_list(i) = cur_nodes(j);
-                    cur_nodes = cur_nodes(j).children;
-                    break;                        
-                end
+            % handle case for root_input had no children
+            if ~hit_loop
+                i = 1;
+                for j = 1:length(cur_nodes)
 
-                if j == length(cur_nodes)
-                    % add rest of input as chain of nodes
-                    if ~isempty(node_list)
-                        node_list(end).add_child(cur_input);
-                    else
-                        obj.root_nodes = [obj.root_nodes, cur_input];
+                    if cur_nodes(j).is_equal(cur_input)
+                        node_list(i) = cur_nodes(j);
+                        cur_nodes = cur_nodes(j).children;
+                        break;                        
+                    end
+
+                    if j == length(cur_nodes)
+                        % add rest of input as chain of nodes
+                        if ~isempty(node_list)
+                            node_list(end).add_child(cur_input);
+                        else
+                            obj.root_nodes = [obj.root_nodes, cur_input];
+                        end
                     end
                 end
             end

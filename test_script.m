@@ -1,6 +1,8 @@
-dummy_input_1 = [60 62 63 65];
-dummy_input_2 = [60 62 62 63];
+dummy_input_1 = [57 59 60 62];
+dummy_input_2 = [57 59 59 60];
 
 test_tree = Prefix_tree;
 
 test_tree.parse(dummy_input_1)
+%%
+test_tree.parse(dummy_input_2)

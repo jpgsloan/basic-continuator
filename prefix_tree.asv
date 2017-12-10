@@ -1,4 +1,4 @@
-classdef Prefix_tree
+classdef Prefix_tree < handle
     
     properties
         
@@ -11,15 +11,7 @@ classdef Prefix_tree
     
         % get prefixes from input
         
-        function [prefix] = parse(obj, midi_input)
-
-            % error checking stage wants only integer values between 0 and 127,
-            % with at least two values,
-            % and needs m to be a column vector
-
-            % input 'm' for MIDI is MIDI pitch values already parsed from MIDI data
-
-            % output 'p' for prefixes is a multi-dimensional cell array
+        function [obj] = parse(obj, midi_input)
 
             prefix = [];
             overall = length(obj.training_input);
@@ -33,22 +25,23 @@ classdef Prefix_tree
                 contin_indices = ones(i,1) * i + 1 + overall;
                 prefix = [midi_input(i:-1:1),contin_indices];
 
-                new_nodes(length(prefix),1) = Node;
-                for j = length(prefix):-1:1
+                new_nodes(size(prefix,1),1) = Node;
+                for j = size(prefix, 1):-1:1
                     new_nodes(j).note_value = prefix(j,1);
                     new_nodes(j).add_contin(prefix(j,2));
-                    if j < length(prefix)
+                    if j < size(prefix, 1)
                        new_nodes(j).add_child(new_nodes(j+1));
                     end
                 end
                 
-                add_input(new_nodes(1));
+                obj.add_input(new_nodes(1));
+                 clear new_nodes;
             end
         end
         
         % add input to tree
         
-        function [] = add_input(obj, root_input)
+        function [obj] = add_input(obj, root_input)
             
             node_list = [];
             cur_nodes = obj.root_nodes;
@@ -56,7 +49,19 @@ classdef Prefix_tree
             i = 0;
             
             while cur_input.has_children
+                
                 i = i + 1;
+                
+                % if tree has no further nodes, add remaining input
+                if isempty(cur_nodes)
+                   if ~isempty(node_list)
+                        node_list(end).add_child(cur_input);
+                   else
+                        obj.root_nodes = [obj.root_nodes, cur_input];
+                   end 
+                   break
+                end
+                
                 for j = 1:length(cur_nodes)
                     
                     if cur_nodes(j).is_equal(cur_input)
@@ -71,6 +76,7 @@ classdef Prefix_tree
                             node_list(end).add_child(cur_input);
                         else
                             obj.root_nodes = [obj.root_nodes, cur_input];
+                            % cur_nodes instead of obj.root_nodes?
                         end
                     end
                 end
@@ -78,11 +84,17 @@ classdef Prefix_tree
                 cur_input = cur_input.children(1);
             end
             
+            % handle case for cur_input has no children
+            % while loop above ends with cur_input as the last child
             for j = 1:length(cur_nodes)
                     
                 if cur_nodes(j).is_equal(cur_input)
                     node_list(i) = cur_nodes(j);
                     cur_nodes = cur_nodes(j).children;
+                        % mysteriously adding extra root node on 2nd iter,
+                        % causing a type mismatch at line 98,
+                        % because node_list is uninitialized!
+                        % find reason for phantom root node
                     break;                        
                 end
 
@@ -92,15 +104,16 @@ classdef Prefix_tree
                         node_list(end).add_child(cur_input);
                     else
                         obj.root_nodes = [obj.root_nodes, cur_input];
+                        % 2nd iter is hitting this line, and adding
+                        % the last child of input as a new root node here
                     end
                 end
             end
-            % handle case for cur_input is length 1
-            
+
             % add continuation indices to node_list
-            
-            
-            
+            for k = 1:length(node_list)
+                node_list(k).add_contin(cur_input.contin_list(1));
+            end
         end
         
     end
