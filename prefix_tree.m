@@ -86,14 +86,12 @@ classdef Prefix_tree < handle
                 cur_input = cur_input.children(1);
             end
             
-            % handle case for root_input had no children
-            if ~hit_loop
-                i = 1;
+            % handle case for remaining input has no children
+                i = i + 1;
                 for j = 1:length(cur_nodes)
 
                     if cur_nodes(j).is_equal(cur_input)
                         node_list(i) = cur_nodes(j);
-                        cur_nodes = cur_nodes(j).children;
                         break;                        
                     end
 
@@ -101,12 +99,14 @@ classdef Prefix_tree < handle
                         % add rest of input as chain of nodes
                         if ~isempty(node_list)
                             node_list(end).add_child(cur_input);
-                        else
+                        else if ~hit_loop
+                                % if root_input had no children, it's a
+                                % new root node
                             obj.root_nodes = [obj.root_nodes, cur_input];
+                            end
                         end
                     end
                 end
-            end
 
             % add continuation indices to node_list
             for k = 1:length(node_list)
