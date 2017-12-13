@@ -10,10 +10,3 @@ test_tree.parse(dummy_input_2)
 dummy_input_3 = [57 59 60 57];
 
 test_tree.parse(dummy_input_3);
-
-%%
-a = Node(57, [], []);
-b = Node(59, [], []);
-c = Node(60, [], []);
-
-out_seq = test_tree.generate([a b], 4);
