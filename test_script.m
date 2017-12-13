@@ -1,3 +1,4 @@
+clear;
 dummy_input_1 = [57 59 60 62];
 dummy_input_2 = [57 59 59 60];
 
