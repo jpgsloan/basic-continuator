@@ -44,17 +44,20 @@ classdef Prefix_tree < handle
         
         function [output] = generate(obj, input, len)
             % generates an output sequence of given length based on the
-            % input.
+            % input
+            
             output(1,len) = Node;
             cur_input = input;
-            for i = 1:len
-                output(i) = obj.continue_input(cur_input); 
-                cur_input = [cur_input, output(i)];
-            end  
+          for i = 1:len
+             output(i) = obj.continue_input(cur_input); 
+             cur_input = [cur_input, output(i)];
+          end
+            
         end
         
+        % get prefixes from input
         function [obj] = parse(obj, midi_input)
-            % get prefixes from input
+
             prefix = [];
             overall = length(obj.training_input);
             obj.training_input = [obj.training_input, midi_input];
@@ -81,9 +84,10 @@ classdef Prefix_tree < handle
                  clear new_nodes;
             end
         end
-               
+        
+        % add input to tree
         function [obj] = add_input(obj, root_input)
-            % add input to tree
+            
             node_list = Node.empty;
             cur_nodes = obj.root_nodes;
             cur_input = root_input;
