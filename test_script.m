@@ -27,6 +27,7 @@ notes = midiInfo(midi, 0, [4]);
 
 [buckets, buck_dur] = buck_sort(midi, 4);
 
+% calculate which buckets are good for training.
 threshold = 0.8;
 bools = zeros(size(buckets));
 for i = 1:size(buckets,2)
@@ -39,9 +40,34 @@ for i = 1:size(buckets,2)
     end
 end
 
-disp(bools);
-%track = midi.track(1);
-%notes(1:5,1:5)
+
+% for each track, build prefix tree.
+trees = Prefix_tree.empty(0,size(buckets,2));
+for k = 1:size(buckets,2)
+    
+    % get indeces where nonzero (aka buckets are good to use)
+    index = find(bools(:,k));
+    cur_track = buckets(:,k);
+    good_bucks = cur_track(index);
+    
+    cur_tree = Prefix_tree;
+    
+    % parse training input into tree
+    if ~isempty(index) 
+        for l=1:size(good_bucks,1)
+            cur_good_buck = good_bucks(l,1);
+            cur_tree.parse(bucket2notes(cur_good_buck{1}));
+        end
+    end
+    trees(1,k) = cur_tree;
+end
+
+
+% for each tree, create [input, continuation] pairs.
+trees(4).generate_notes(notes2nodes(notes_test),length_test)
+
+% convert new notes to midi file.
+
 
 
 %% also, can do piano-roll showing velocity:
