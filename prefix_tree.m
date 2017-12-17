@@ -53,6 +53,19 @@ classdef Prefix_tree < handle
             end  
         end
         
+        function [output] = generate_notes(obj, input, len)
+            % generates an output sequence of given length based on the
+            % input.
+            out_nodes = generate(obj,input,len);
+            
+            output = int16.empty(0,size(out_nodes,2));
+            for i = 1:size(out_nodes,2)
+                cur_node = out_nodes(i);          
+                output(1,i) = cur_node.note_value;
+            end
+            
+        end
+        
         function [obj] = parse(obj, midi_input)
             % get prefixes from input
             prefix = [];

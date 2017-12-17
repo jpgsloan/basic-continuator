@@ -17,7 +17,8 @@ a = Node(57, [], []);
 b = Node(59, [], []);
 c = Node(60, [], []);
 
-out_seq = test_tree.generate([a b], 4);
+out_seq_nodes = test_tree.generate([a b], 4);
+out_seq = test_tree.generate_notes([a b], 4);
 
 %% midi
 
