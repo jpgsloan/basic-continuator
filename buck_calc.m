@@ -1,4 +1,4 @@
-function [buck_lin] = buck_calc(bpm, ts, bars, end_time)
+function [buck_lin, buck_dur] = buck_calc(bpm, ts, bars, end_time)
 
     % Function that returns the duration of a bucket in seconds,
         % where the bucket is of length given in bars
