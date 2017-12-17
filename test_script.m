@@ -21,11 +21,22 @@ out_seq = test_tree.generate([a b], 4);
 
 %% midi
 
-midi = readmidi('3a0e08597088225b13edaab26ce1e7d2.mid');
+midi = readmidi('test-midi/3a0e08597088225b13edaab26ce1e7d2.mid');
 notes = midiInfo(midi, 0, [4]);
 
-bool = analyze_bucket(notes(1:2,:), 1.5, 0.5)
+threshold = 0.8;
+[buckets, buck_dur] = buck_sort(midi, 4);
+disp('');
+%bool = analyze_bucket(buckets, 1.5, 0.5)
 
+for i = 1:size(buckets,2)
+    for j = 1:size(buckets,1)
+        cur_bucket = buckets(j,i);
+        bools(j,i) = analyze_bucket(cur_bucket{1}, buck_dur, threshold);
+    end
+end
+
+disp(bools);
 %track = midi.track(1);
 %notes(1:5,1:5)
 
