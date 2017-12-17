@@ -1,0 +1,20 @@
+% time_script
+
+midi = readmidi('ff1prelu.mid');
+
+[bpm, ts] = time_calc(midi);
+
+[notes, end_time] = midiInfo(midi, 0, []);
+end_time = max(end_time);
+
+[buck_dur, buck_lin] = buck_calc(bpm, ts, 8, end_time);
+
+buck_notes = cell(length(buck_lin),length(midi.track));
+
+for i=1:length(midi.track)
+   
+    track_notes = notes(notes(:,1)
+    
+end
+
+%% 
