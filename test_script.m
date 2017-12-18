@@ -35,10 +35,10 @@ for i=1:size(output_data,1)
     cur_contin = output_data(i,6);
     
     % convert new notes to midi file.
-    contin2midi(cur_contin,cur_bucket,bpm,ts,'output/');
+    contin2midi(cur_contin{1},cur_input{1},bpm,ts,['output/dopeness',i,'.mid']);
     
     % calculate edit distance for pairs etc.
-    % edit_dist = edit_distance(truth4,contin4);
+    edit_dist = edit_distance(cur_truth{1},cur_contin{1});
 
     % can also calculate longest common subsequence
 end
