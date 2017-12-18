@@ -27,31 +27,8 @@ midi = readmidi(filename);
 notes = midiInfo(midi, 0, [4]);
 
 output_data = contins_for_file(filename,1,4);
+output_data = analyze_contins(output_data,4,bpm,ts,true);
 
-mkdir('.','output');
-for i=1:size(output_data,1)
-    cur_input = output_data(i,4);
-    cur_truth = output_data(i,5);
-    cur_contin = output_data(i,6);
-    
-    % convert new notes to midi file.
-    contin2midi(cur_contin{1},cur_input{1},bpm,ts,['output/dopeness',i,'.mid']);
-    
-    % calculate edit distance for pairs etc.
-    edit_dist = edit_distance(cur_truth{1},cur_contin{1});
-
-    % can also calculate longest common subsequence
-end
-
-
-% calculate edit distance for pairs etc.
-% edit_dist = edit_distance(truth4,contin4);
-
-% can also calculate longest common subsequence
-% seqs = {truth4;contin4};
-% longest_string = multiLCS(seqs);
-% longest_seq = double(longest_string{1});
-% longest_seq_len = numel(longest_seq);
 %% also, can do piano-roll showing velocity:
 [PR,t,nn] = piano_roll(notes,1);
 
