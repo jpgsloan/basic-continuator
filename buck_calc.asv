@@ -1,8 +1,0 @@
-function [buck_dur, buck_lin] = buck_calc(bpm, ts, bars, end_time)
-
-    buck_dur = ts * bars * 60 / bpm;
-    
-    if mod(end_time,
-    buck_lin = [0:buck_dur:end_time,end_time];
-
-end

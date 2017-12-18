@@ -18,7 +18,7 @@ for i=1:length(midi.track)
     
     for j=1:length(buck_lin)-1
        
-        buck_notes{j,i} = track_notes((track_notes(:,5)>=buck_lin(j)) & (track_notes(:,5)<=buck_lin(j+1)),:);
+        buck_notes{j,i} = track_notes((track_notes(:,5)>=buck_lin(j)) & (track_notes(:,5)<buck_lin(j+1)),:);
         
     end
 end
