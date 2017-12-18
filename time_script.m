@@ -7,7 +7,7 @@ midi = readmidi('ff1prelu.mid');
 [notes, end_time] = midiInfo(midi, 0, []);
 end_time = max(end_time);
 
-[buck_dur, buck_lin] = buck_calc(bpm, ts, 8, end_time);
+[buck_lin, buck_dur] = buck_calc(bpm, ts, 8, end_time);
 
 buck_notes = cell(length(buck_lin)-1,length(midi.track));
 
@@ -29,6 +29,6 @@ end
 clear;
 midi = readmidi('ff1prelu.mid');
 
-bars = 8;
+bars = 2;
 
-[buck_notes] = buck_sort(midi, bars);
+[buck_notes, buck_dur] = buck_sort(midi, bars);
