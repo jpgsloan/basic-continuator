@@ -1,4 +1,4 @@
-function [] = contin2midi(continuation,bucket,bpm,filename)
+function [] = contin2midi(continuation,bucket,bpm,time_sig,filename)
 
     % Writes MIDI file from continuation
     
@@ -17,7 +17,7 @@ function [] = contin2midi(continuation,bucket,bpm,filename)
     
     uspb = (60 * 10^6)/bpm; % convert beats / minute to microseconds / beat
     
-    midi = matrix2midi_notempo(bucket,480,uspb); % generate midi struct
+    midi = matrix2midi_notempo(bucket,480,uspb,time_sig); % generate midi struct
     
     writemidi(midi,filename);
 

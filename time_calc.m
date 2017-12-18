@@ -19,6 +19,4 @@ hex_base = [16^4;16^2;16^0];
 
 bpm = (60 * 10^6) / sum(midi_tempo .* hex_base);
 
-time_sig = time_sig(1);
-
 end

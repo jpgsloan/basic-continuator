@@ -5,7 +5,7 @@ function [buck_notes, buck_dur] = buck_sort(midi, bars)
 [notes, end_time] = midiInfo(midi, 0, []);
 end_time = max(end_time);
 
-[buck_lin, buck_dur] = buck_calc(bpm, ts, bars, end_time);
+[buck_lin, buck_dur] = buck_calc(bpm, ts(1), bars, end_time);
 
 buck_notes = cell(length(buck_lin)-1,length(midi.track));
 
