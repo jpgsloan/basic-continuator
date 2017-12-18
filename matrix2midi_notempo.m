@@ -1,4 +1,4 @@
-function midi=matrix2midi_notempo(M,ticks_per_quarter_note,timesig)
+function midi=matrix2midi_notempo(M,ticks_per_quarter_note,tempo,timesig)
 % midi=matrix2midi(M,ticks_per_quarter_note)
 %
 % generates a midi matlab structure from a matrix
@@ -25,7 +25,7 @@ if nargin < 2
   ticks_per_quarter_note = 300;
 end
 
-if nargin < 3
+if nargin < 4
   timesig = [4,2,24,8];
 end
 
@@ -69,13 +69,13 @@ for i=1:Ntracks
   
   msgCtr = 1;
   
-  % set tempo...
-%   midi.track(i).messages(msgCtr).deltatime = 0;
-%   midi.track(i).messages(msgCtr).type = 81;
-%   midi.track(i).messages(msgCtr).midimeta = 0;
-%   midi.track(i).messages(msgCtr).data = encode_int(tempo,3);
-%   midi.track(i).messages(msgCtr).chan = [];
-%   msgCtr = msgCtr + 1;
+%   set tempo...
+  midi.track(i).messages(msgCtr).deltatime = 0;
+  midi.track(i).messages(msgCtr).type = 81;
+  midi.track(i).messages(msgCtr).midimeta = 0;
+  midi.track(i).messages(msgCtr).data = encode_int(tempo,3);
+  midi.track(i).messages(msgCtr).chan = [];
+  msgCtr = msgCtr + 1;
   
   % set time sig...
   midi.track(i).messages(msgCtr).deltatime = 0;
