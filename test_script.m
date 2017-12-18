@@ -23,11 +23,26 @@ out_seq = test_tree.generate_notes([a b], 4);
 
 filename = 'test-midi/3a0e08597088225b13edaab26ce1e7d2.mid';
 midi = readmidi(filename);
+[bpm, ts] = time_calc(midi);
 notes = midiInfo(midi, 0, [4]);
 
 output_data = contins_for_file(filename,1,4);
 
-% convert new notes to midi file.
+mkdir('.','output');
+for i=1:size(output_data,1)
+    cur_input = output_data(i,4);
+    cur_truth = output_data(i,5);
+    cur_contin = output_data(i,6);
+    
+    % convert new notes to midi file.
+    contin2midi(cur_contin,cur_bucket,bpm,ts,'output/');
+    
+    % calculate edit distance for pairs etc.
+    % edit_dist = edit_distance(truth4,contin4);
+
+    % can also calculate longest common subsequence
+end
+
 
 % calculate edit distance for pairs etc.
 % edit_dist = edit_distance(truth4,contin4);
