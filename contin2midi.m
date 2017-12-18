@@ -20,8 +20,8 @@ function [] = contin2midi(continuation,bucket,phrase_length,bpm,time_sig,filenam
     
     buck_dur = time_sig(1) * phrase_length * 60 / bpm;
     
-    output(:,5:6) = bucket(:,5:6) - min(bucket(:,5:6)) + buck_dur; % normalize start times to buck_dur
-    bucket(:,5:6) = bucket(:,5:6) - min(bucket(:,5:6)); % normalize to 0
+    output(:,5:6) = bucket(:,5:6) - min(bucket(:,5)) + buck_dur; % normalize start times to buck_dur
+    bucket(:,5:6) = bucket(:,5:6) - min(bucket(:,5)); % normalize to 0
     
     output = [bucket;output];
     
