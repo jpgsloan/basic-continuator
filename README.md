@@ -1,11 +1,11 @@
 # basic-continuator
 A basic implementation of Pachet's Continuator.
 
-##Files of interest:
+Files of interest:
+
 	live_demo.m - an example script for testing out the continuator
 			* can generate example [input,continuation] midi files
 			* includes example for generating plots for a dataset
-
 
 	Prefix_tree.m - Data structure for the continuator's prefix tree. 
 			* contains functions for parsing input sequences to trees
