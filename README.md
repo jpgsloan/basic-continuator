@@ -3,9 +3,20 @@ A basic implementation of Pachet's Continuator.
 
 Files of interest:
 
+
+	Examples
+
 	live_demo.m - an example script for testing out the continuator
 			* can generate example [input,continuation] midi files
 			* includes example for generating plots for a dataset
+
+	test_script.m - contains a few short examples
+			* example for building prefix tree
+			* example for generating continuation
+			* example for generating continuation midi files
+
+
+	Implementations
 
 	Prefix_tree.m - Data structure for the continuator's prefix tree. 
 			* contains functions for parsing input sequences to trees
@@ -26,8 +37,3 @@ Files of interest:
 	generate_dataset.m - script that generates dataset for given folder
 			* Must give path to folder of midi files
 			* creates the dataset based on found 4 bar midi section
-
-	test_script.m - contains a few short examples
-			* example for building prefix tree
-			* example for generating continuation
-			* example for generating continuation midi files
