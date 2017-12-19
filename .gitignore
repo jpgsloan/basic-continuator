@@ -1,3 +1,15 @@
+# lakh dataset
+lmd_full/*
+
+#ds_store
+.DS_Store
+
+# midi files
+*.mid
+
+# generated output folder
+output/*
+
 # Windows default autosave extension
 *.asv
 

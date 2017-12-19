@@ -26,11 +26,15 @@ for m=1:size(trees,2)
                 % convert bucket notes to tree nodes
                 bucket_nodes = notes2nodes(bucket_notes);
                 
-                % generate continuation with current track's tree
-                cur_contin = cur_tree.generate_notes(bucket_nodes, len_buck_notes);
-                              
+                % generate 10 continuations with current track's tree
+                contins = cell.empty(0,10);
+                for x=1:10
+                    cur_contin = cur_tree.generate_notes(bucket_nodes, len_buck_notes);
+                    contins(1,x) = {cur_contin};
+                end          
+                
                 % create 1x6 array of output data
-                data_row = [filename, m, cur_buck_num, cur_bucket, cur_truth, cur_contin];
+                data_row = [filename, m, cur_buck_num, cur_bucket, cur_truth, {contins}];
                 output_data = [output_data; data_row];
                 
                 n = n - 1;
