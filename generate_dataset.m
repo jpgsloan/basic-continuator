@@ -18,20 +18,23 @@
 % KNOWN ISSUE: there is a bug in the midi framework used, that crashes when
 % reading midi files with unexpected headers. This prevents running on the
 % entirety of the LAKH dataset, but still works for a large portion of it.
+path_to_lakh = 'lmd_full/';
+folder_number = '0';
+phrase_length = 4;
 
-addpath('lmd_full/5/');
-files = dir('lmd_full/5/*.mid');
+addpath([path_to_lakh,folder_number,'/']);
+files = dir([path_to_lakh,folder_number,'/*.mid']);
 midi_cells = cell(size(files));
 
 dataset = [];
 
 for i = 1:size(files,1)    
-    filename = ['lmd_full/5/',files(i).name];
+    filename = [path_to_lakh,folder_number,'/',files(i).name];
     midi = readmidi(filename);
     [bpm, ts] = time_calc(midi);
 
-    output_data = contins_for_file(filename,1,4);
-    output_data = analyze_contins(output_data,4,bpm,ts,false);
+    output_data = contins_for_file(filename,1,phrase_length);
+    output_data = analyze_contins(output_data,phrase_length,bpm,ts,false);
     
     dataset = [dataset; output_data];
 end

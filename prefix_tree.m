@@ -11,6 +11,11 @@ classdef Prefix_tree < handle
         
         function [node] = continue_input(obj, input)
             % Returns a single continuation node of an input sequence.
+            if isempty(obj.root_nodes)
+                node = Node.empty;
+                return;  
+            end
+            
             cur_tree_nodes = obj.root_nodes;
             i = size(input,2);
             
@@ -48,7 +53,13 @@ classdef Prefix_tree < handle
             output(1,len) = Node;
             cur_input = input;
             for i = 1:len
-                output(i) = obj.continue_input(cur_input); 
+                new_node = obj.continue_input(cur_input);
+                if ~isempty(new_node)
+                    output(i) =  new_node;
+                else
+                    output(i) = Node();
+                end
+                
                 cur_input = [cur_input, output(i)];
             end  
         end
