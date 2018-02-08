@@ -17,9 +17,9 @@ output_data = analyze_contins(output_data,phrase_length,bpm,ts,true);
 % All generated midi files are now available in the generated output folder.
 
 %%
-% MUST FIRST LOAD TOTAL_DATASET FROM FILE. This is the dataset that we
+% MUST FIRST LOAD A DATASET FROM FILE. This is the dataset that we
 % generated which includes 745 samples.
 
-plot_analysis(total_dataset);
+plot_analysis(dataset);
 
 

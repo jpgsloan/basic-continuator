@@ -23,9 +23,11 @@ out_seq = test_tree.generate_notes([a b], 4);
 
 %% generate [input,continuation] midi files
 
+addpath('matlab-midi-master/src');
+
 filename = 'test-midi/3a0e08597088225b13edaab26ce1e7d2.mid';
 midi = readmidi(filename);
 [bpm, ts] = time_calc(midi);
 notes = midiInfo(midi, 0, [4]);
 output_data = contins_for_file(filename,1,4);
-output_data = analyze_contins(output_data,4,bpm,ts,true);
+output_data = analyze_contins(output_data,4,bpm,ts,true)
