@@ -1,7 +1,13 @@
 %% build an example prefix tree
 
-dummy_input_1 = [57 59 60 62];
-dummy_input_2 = [57 59 59 60];
+dummy_input_1 = [1 1 1 1 1; 0 0 0 0 0; 57 59 59 60 62; 99 68 68 75 88;
+    0.9779 1.2005 1.2010 1.4115 1.6250; 0.9788 1.3037 1.3500 1.5299 1.8268;
+    3 4 5 7 9; 8 6 8 10 11]';
+
+%dummy_input_2 = [57 59 59 60];
+dummy_input_2 = [1 1 1 1 1; 0 0 0 0 0; 57 59 59 59 60; 99 68 68 75 88;
+    0.9779 1.2005 1.2010 1.4115 1.6250; 0.9788 1.3037 1.3500 1.5299 1.8268;
+    3 4 5 7 9; 8 6 8 10 11]';
 
 test_tree = Prefix_tree;
 
@@ -31,3 +37,20 @@ midi = readmidi(filename);
 notes = midiInfo(midi, 0, [4]);
 output_data = contins_for_file(filename,1,4);
 output_data = analyze_contins(output_data,4,bpm,ts,true)
+
+%% generate chords
+
+addpath('matlab-midi-master/src');
+
+filename = 'test-midi/3a0e08597088225b13edaab26ce1e7d2.mid';
+midi = readmidi(filename);
+notes = midiInfo(midi, 0, [7]);
+disp('=====num of notes======');
+size(notes,1)
+disp('=====num of polyphonic groups======');
+chords = group_chords(notes);
+size(chords,2)
+
+test_tree = Prefix_tree;
+test_tree.parse_poly(notes);
+

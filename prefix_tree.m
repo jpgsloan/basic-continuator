@@ -1,14 +1,15 @@
 classdef Prefix_tree < handle
      
-    properties
-        
+    properties       
         root_nodes = [];
-        training_input = [];
         
+        % training input is a cell array of midi note matrices. For
+        % example, a 3 note chord will be a 3x8 note matrix stored at a
+        % given index of the training_input cell array.
+        training_input = [];
     end
     
     methods
-        
         function [node] = continue_input(obj, input)
             % Returns a single continuation node of an input sequence.
             if isempty(obj.root_nodes)
@@ -38,7 +39,7 @@ classdef Prefix_tree < handle
             
             if ~isempty(prev_node)
                contin_index = prev_node.pick_contin();
-               node = Node(obj.training_input(contin_index), [], []);
+               node = Node(obj.training_input{contin_index}, [], []);
             else
                 % pick random root node to start again.
                 i = randi(length(obj.root_nodes));
@@ -47,62 +48,66 @@ classdef Prefix_tree < handle
             
         end
         
-        function [output] = generate(obj, input, len)
+        function [output_nodes] = generate(obj, input, len)
             % generates an output sequence of given length based on the
             % input.
-            output(1,len) = Node;
+            output_nodes(1,len) = Node;
             cur_input = input;
             for i = 1:len
                 new_node = obj.continue_input(cur_input);
                 if ~isempty(new_node)
-                    output(i) =  new_node;
+                    output_nodes(i) =  new_node;
                 else
-                    output(i) = Node();
+                    output_nodes(i) = Node();
                 end
                 
-                cur_input = [cur_input, output(i)];
+                cur_input = [cur_input, output_nodes(i)];
             end  
         end
         
-        function [output] = generate_notes(obj, input, len)
-            % generates an output sequence of given length based on the
+        function [output_values] = generate_notes(obj, input, len)
+            % generates an output sequence of midi note values given length based on the
             % input.
             out_nodes = generate(obj,input,len);
             
-            output = int16.empty(0,size(out_nodes,2));
+            output_values = int16.empty(0,size(out_nodes,2));
             for i = 1:size(out_nodes,2)
                 cur_node = out_nodes(i);          
-                output(1,i) = cur_node.note_value;
+                output_values(1,i) = cur_node.note_value;
             end
             
         end
         
+        
         function [obj] = parse(obj, midi_input)
-            % get prefixes from input
             prefix = [];
             overall = length(obj.training_input);
             obj.training_input = [obj.training_input, midi_input];
-
-            if size(midi_input,2) > size(midi_input,1)
-                midi_input = midi_input';
+            
+            chords = group_chords(midi_input);
+            
+            if size(chords,2) > size(chords,1)
+                chords = reshape(chords,[length(chords),1]);
             end
-
-            for i = length(midi_input)-1:-1:1
-    
-                contin_indices = ones(i,1) * i + 1 + overall;
-                prefix = [midi_input(i:-1:1),contin_indices];
-
+            
+            for i = size(chords,1)-1:-1:1
+                contin_index = i + 1 + overall;
+                prefix = chords(i:-1:1);
+                
                 new_nodes(size(prefix,1),1) = Node;
+               
                 for j = size(prefix, 1):-1:1
-                    new_nodes(j).note_value = prefix(j,1);
-                    new_nodes(j).add_contin(prefix(j,2));
+                    full_midi = prefix(j,1);
+                    new_nodes(j).full_midi = full_midi{1};
+                    new_nodes(j).add_contin(contin_index);
                     if j < size(prefix, 1)
                        new_nodes(j).add_child(new_nodes(j+1));
                     end
                 end
                 
                 obj.add_input(new_nodes(1));
-                 clear new_nodes;
+                clear new_nodes;
+                
             end
         end
                

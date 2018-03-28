@@ -1,72 +1,62 @@
 classdef Node < handle
     
     properties
-        
-        note_value;
         contin_list = [];
         children = [];
         
+        % matrix of midi notes Nx8 (see Ken Schutte for col values) 
+        full_midi = []; 
     end
     
-    methods
-        
-        % initializers
-        
+    methods      
+        % initializer
         function obj = Node(varargin)
-            
-            if nargin == 3
-                obj.note_value = varargin{1};
+            if nargin == 1
+                obj.full_midi = varargin{1};
+            elseif nargin == 3
+                obj.full_midi = varargin{1};
                 obj.contin_list = varargin{2};
                 obj.children = varargin{3};
             else
-                obj.note_value = -1;
+                obj.full_midi = [];
                 obj.contin_list = [];
                 obj.children = [];
             end
-            
         end
         
-        % equality testing function
-        
+        % check if two nodes are equal
         function [comp] = is_equal(obj, other_node)
-           
-            comp = (obj.note_value == other_node.note_value);
             
+            % TODO: must update to check if note lists are equal.
+            obj_note_values = obj.note_values();
+            other_note_values = other_node.note_values();
+            comp = (obj_note_values == other_note_values);
         end
         
-        % random continuation function
-        
+        % pick from continuation list at random 
         function [next] = pick_contin(obj)
-           
             i = randi(length(obj.contin_list));
             next = obj.contin_list(i);
-            
         end
         
         % add to continuation list
-        
         function [obj] = add_contin(obj, contin)
-            
            obj.contin_list = [obj.contin_list, contin]; 
-            
         end
         
-        % add child function
-        
+        % add child node
         function [obj] = add_child(obj, child_node)
-            
             obj.children = [obj.children, child_node];
-            
         end
-        
-        % has children function
         
         function [has] = has_children(obj)
-           
             has = ~isempty(obj.children);
-            
         end
         
-    end
-    
+        function[note_values] = note_values(obj)
+            if ~isempty(obj.full_midi) 
+                note_values = obj.full_midi(:,3);
+            end
+        end
+    end 
 end
