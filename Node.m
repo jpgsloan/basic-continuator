@@ -1,8 +1,13 @@
 classdef Node < handle
     
     properties
-        contin_list = [];
         children = [];
+        
+        % list of possible continuation nodes.
+        contin_list = [];
+        
+        % times from last note in node to each continuation.
+        contin_timing = []; 
         
         % matrix of midi notes Nx8 (see Ken Schutte for col values) 
         full_midi = []; 
@@ -13,14 +18,16 @@ classdef Node < handle
         function obj = Node(varargin)
             if nargin == 1
                 obj.full_midi = varargin{1};
-            elseif nargin == 3
+            elseif nargin == 4
                 obj.full_midi = varargin{1};
-                obj.contin_list = varargin{2};
-                obj.children = varargin{3};
+                obj.children = varargin{2};
+                obj.contin_list = varargin{3};
+                obj.contin_timing = varargin{4};
             else
                 obj.full_midi = [];
                 obj.contin_list = [];
                 obj.children = [];
+                obj.contin_timing = [];
             end
         end
         
@@ -30,18 +37,20 @@ classdef Node < handle
             % TODO: must update to check if note lists are equal.
             obj_note_values = obj.note_values();
             other_note_values = other_node.note_values();
-            comp = (obj_note_values == other_note_values);
+            comp = isequal(obj_note_values, other_note_values);
         end
         
         % pick from continuation list at random 
-        function [next] = pick_contin(obj)
+        function [next, timing] = pick_contin(obj)
             i = randi(length(obj.contin_list));
             next = obj.contin_list(i);
+            timing = obj.contin_timing(i);
         end
         
         % add to continuation list
-        function [obj] = add_contin(obj, contin)
+        function [obj] = add_contin(obj, contin, timing)
            obj.contin_list = [obj.contin_list, contin]; 
+           obj.contin_timing = [obj.contin_timing, timing];
         end
         
         % add child node

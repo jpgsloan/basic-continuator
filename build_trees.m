@@ -15,7 +15,7 @@ for k = 1:size(buckets,2)
     if ~isempty(index) 
         for l=1:size(good_bucks,1)
             cur_good_buck = good_bucks(l,1);
-            cur_tree.parse(bucket2notes(cur_good_buck{1}));
+            cur_tree.parse(cur_good_buck{1});
         end
     end
     trees(1,k) = cur_tree;

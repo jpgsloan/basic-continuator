@@ -63,28 +63,26 @@ classdef Prefix_tree < handle
                 
                 cur_input = [cur_input, output_nodes(i)];
             end  
-        end
+        end       
         
         function [output_values] = generate_notes(obj, input, len)
             % generates an output sequence of midi note values given length based on the
             % input.
             out_nodes = generate(obj,input,len);
             
-            output_values = int16.empty(0,size(out_nodes,2));
+            output_values = cell.empty(0,size(out_nodes,2));
             for i = 1:size(out_nodes,2)
                 cur_node = out_nodes(i);          
-                output_values(1,i) = cur_node.note_value;
+                output_values(1,i) = {cur_node.note_values()};
             end
             
         end
         
-        
         function [obj] = parse(obj, midi_input)
             prefix = [];
-            overall = length(obj.training_input);
-            obj.training_input = [obj.training_input, midi_input];
-            
             chords = group_chords(midi_input);
+            overall = size(obj.training_input,2);
+            obj.training_input = [obj.training_input, chords];
             
             if size(chords,2) > size(chords,1)
                 chords = reshape(chords,[length(chords),1]);
@@ -93,13 +91,17 @@ classdef Prefix_tree < handle
             for i = size(chords,1)-1:-1:1
                 contin_index = i + 1 + overall;
                 prefix = chords(i:-1:1);
+                last_notes = chords{i};
+                
+                contin_timing = continuation_timing(...
+                    last_notes, obj.training_input{contin_index});
                 
                 new_nodes(size(prefix,1),1) = Node;
                
                 for j = size(prefix, 1):-1:1
                     full_midi = prefix(j,1);
                     new_nodes(j).full_midi = full_midi{1};
-                    new_nodes(j).add_contin(contin_index);
+                    new_nodes(j).add_contin(contin_index,contin_timing);
                     if j < size(prefix, 1)
                        new_nodes(j).add_child(new_nodes(j+1));
                     end
@@ -160,7 +162,7 @@ classdef Prefix_tree < handle
 
             % add continuation indices to node_list
             for k = 1:length(node_list)
-                node_list(k).add_contin(root_input.contin_list(1));
+                node_list(k).add_contin(root_input.contin_list(1), root_input.contin_timing(1));
             end
         end
         

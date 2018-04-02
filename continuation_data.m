@@ -19,9 +19,8 @@ for m=1:size(trees,2)
                 cur_tree = trees(1,m);
                 
                 % extract input bucket as notes
-                input = cur_bucket{1};
-                bucket_notes = bucket2notes(input);
-                len_buck_notes = size(bucket_notes,2);
+                bucket_notes  = cur_bucket{1};
+                len_buck_notes = size(bucket_notes,1);
                 
                 % convert bucket notes to tree nodes
                 bucket_nodes = notes2nodes(bucket_notes);

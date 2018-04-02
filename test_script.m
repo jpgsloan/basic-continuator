@@ -5,24 +5,21 @@ dummy_input_1 = [1 1 1 1 1; 0 0 0 0 0; 57 59 59 60 62; 99 68 68 75 88;
     3 4 5 7 9; 8 6 8 10 11]';
 
 %dummy_input_2 = [57 59 59 60];
-dummy_input_2 = [1 1 1 1 1; 0 0 0 0 0; 57 59 59 59 60; 99 68 68 75 88;
-    0.9779 1.2005 1.2010 1.4115 1.6250; 0.9788 1.3037 1.3500 1.5299 1.8268;
-    3 4 5 7 9; 8 6 8 10 11]';
+dummy_input_2 = [1 1 1 1 1 1; 0 0 0 0 0 0; 57 59 59 59 59 60; 99 68 68 75 75 88;
+    0.9779 1.2005 1.2010 1.4115 1.4115 1.6250; 0.9788 1.3037 1.3500 1.5299 1.5299 1.8268;
+    3 4 5 7 8 9; 8 6 8 10 12 11]';
 
 test_tree = Prefix_tree;
-
 test_tree.parse(dummy_input_1)
 %% add more input to example tree
 
 test_tree.parse(dummy_input_2)
-%% add 3rd input
-dummy_input_3 = [57 59 60 57];
-test_tree.parse(dummy_input_3);
 
 %% generate example continuation of length 4
-a = Node(57, [], []);
-b = Node(59, [], []);
-c = Node(60, [], []);
+a = Node([1, 0, 57, 99, 0, 0.24, 1, 2], [], [], []);
+b = Node([1, 0, 59, 99, 0, 0.24, 1, 2], [], [], []);
+bb = Node([1 1; 0 0; 59 59; 99 100; 0 0; 0.24 0.24; 1 2; 3 4]', [], [], []);
+c = Node([1; 0; 60; 99; 0; 0.24; 1; 2], [], [], []);
 
 out_seq_nodes = test_tree.generate([a b], 4);
 out_seq = test_tree.generate_notes([a b], 4);
