@@ -28,7 +28,7 @@ for m=1:size(trees,2)
                 % generate 10 continuations with current track's tree
                 contins = cell.empty(0,10);
                 for x=1:10
-                    cur_contin = cur_tree.generate_notes(bucket_nodes, len_buck_notes);
+                    cur_contin = cur_tree.generate_midi(bucket_nodes, len_buck_notes);
                     contins(1,x) = {cur_contin};
                 end          
                 

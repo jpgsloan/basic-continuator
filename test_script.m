@@ -1,5 +1,5 @@
 %% build an example prefix tree
-
+clear all
 dummy_input_1 = [1 1 1 1 1; 0 0 0 0 0; 57 59 59 60 62; 99 68 68 75 88;
     0.9779 1.2005 1.2010 1.4115 1.6250; 0.9788 1.3037 1.3500 1.5299 1.8268;
     3 4 5 7 9; 8 6 8 10 11]';
@@ -27,12 +27,13 @@ out_seq = test_tree.generate_notes([a b], 4);
 %% generate [input,continuation] midi files
 
 addpath('matlab-midi-master/src');
-
 filename = 'test-midi/3a0e08597088225b13edaab26ce1e7d2.mid';
 midi = readmidi(filename);
 [bpm, ts] = time_calc(midi);
-notes = midiInfo(midi, 0, [4]);
+notes = midiInfo(midi, 0, [5]);
 output_data = contins_for_file(filename,1,4);
+
+%%
 output_data = analyze_contins(output_data,4,bpm,ts,true)
 
 %% generate chords
@@ -50,4 +51,14 @@ size(chords,2)
 
 test_tree = Prefix_tree;
 test_tree.parse_poly(notes);
+
+%% test new midi framework
+addpath('midi_lib');
+javaaddpath('midi_lib/KaraokeMidiJava.jar')
+
+note_matrix = readmidi_java('test-midi/3a0e08597088225b13edaab26ce1e7d2.mid');
+track_3 = note_matrix(note_matrix(:,3) == 3,:);
+writemidi_seconds(track_3,'output/hmmm.mid')
+
+
 

@@ -22,21 +22,21 @@ for i=1:size(output_data,1)
         contin2midi(cur_contins{1},cur_input{1},phrase_length,bpm,ts,output_filename);
     end
     
-    edit_dist = zeros(1,size(cur_contins,2));
-    longest_seq_len = zeros(1,size(cur_contins,2));
-    for j=1:size(cur_contins,2)
-        % calculate edit distance for each continuation/ground truth pair. 
-        edit_dist(j) = edit_distance(cur_truth_notes,cur_contins{j});
-        
+    %edit_dist = zeros(1,size(cur_contins,2));
+%     longest_seq_len = zeros(1,size(cur_contins,2));
+%     for j=1:size(cur_contins,2)
+%         % calculate edit distance for each continuation/ground truth pair. 
+%         edit_dist(j) = edit_distance(cur_truth_notes,cur_contins{j});
+%         
         % calculate longest common subsequence for each pair.
-        [d,dist,longest_string] = LCS(cur_truth_notes,int16(cur_contins{j}));
-        longest_seq_len(j) = dist;
-    end
-    output_data{i,7} = edit_dist;
-    output_data(i,8) = {longest_seq_len};
-    
-    % calculate edit dist of truth vs. input
-    output_data{i,9} = edit_distance(cur_truth_notes,cur_input_notes);
+%         [d,dist,longest_string] = LCS(cur_truth_notes,int16(cur_contins{j}));
+%         longest_seq_len(j) = dist;
+%     end
+%     output_data{i,7} = edit_dist;
+%     output_data(i,8) = {longest_seq_len};
+%     
+%     % calculate edit dist of truth vs. input
+%     output_data{i,9} = edit_distance(cur_truth_notes,cur_input_notes);
 end
 
 end

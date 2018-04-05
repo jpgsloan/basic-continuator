@@ -10,7 +10,7 @@ classdef Prefix_tree < handle
     end
     
     methods
-        function [node] = continue_input(obj, input)
+        function [node, timing] = continue_input(obj, input)
             % Returns a single continuation node of an input sequence.
             if isempty(obj.root_nodes)
                 node = Node.empty;
@@ -38,12 +38,14 @@ classdef Prefix_tree < handle
             end
             
             if ~isempty(prev_node)
-               contin_index = prev_node.pick_contin();
-               node = Node(obj.training_input{contin_index}, [], []);
+               [contin_index, timing] = prev_node.pick_contin();
+               node = Node(obj.training_input{contin_index}, [], [], []);
             else
                 % pick random root node to start again.
                 i = randi(length(obj.root_nodes));
                 node = obj.root_nodes(i);
+                timing = 0.1; % TODO: this maybe could be average
+                             %       of distances seen in input.
             end
             
         end
@@ -63,7 +65,7 @@ classdef Prefix_tree < handle
                 
                 cur_input = [cur_input, output_nodes(i)];
             end  
-        end       
+        end 
         
         function [output_values] = generate_notes(obj, input, len)
             % generates an output sequence of midi note values given length based on the
@@ -74,9 +76,34 @@ classdef Prefix_tree < handle
             for i = 1:size(out_nodes,2)
                 cur_node = out_nodes(i);          
                 output_values(1,i) = {cur_node.note_values()};
-            end
-            
+            end  
         end
+        
+        function [output_midi] = generate_midi(obj, input, len)
+            % generates continuation of given length in midi note format.
+            output_midi = [];
+            cur_input = input;
+            overall_time = 0;
+            for i = 1:len
+                [new_node, delay] = obj.continue_input(cur_input);
+                if isempty(new_node)
+                    disp('Error: no continuation generated.')
+                    continue
+                end
+                % add in delay previously seen before continuation.
+                
+                
+                % append midi notes normalized to start at overall
+                % running time.
+                [norm_midi, end_time] = new_node.normalized_timing(overall_time + delay);
+                output_midi = [output_midi; norm_midi];
+                    
+                % increment overall time
+                overall_time = end_time;
+
+                cur_input = [cur_input, new_node];
+            end  
+        end 
         
         function [obj] = parse(obj, midi_input)
             prefix = [];

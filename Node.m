@@ -33,8 +33,6 @@ classdef Node < handle
         
         % check if two nodes are equal
         function [comp] = is_equal(obj, other_node)
-            
-            % TODO: must update to check if note lists are equal.
             obj_note_values = obj.note_values();
             other_note_values = other_node.note_values();
             comp = isequal(obj_note_values, other_note_values);
@@ -62,10 +60,27 @@ classdef Node < handle
             has = ~isempty(obj.children);
         end
         
-        function[note_values] = note_values(obj)
+        function [note_values] = note_values(obj)
             if ~isempty(obj.full_midi) 
                 note_values = obj.full_midi(:,3);
+            else
+                note_values = [];
             end
         end
+        
+        function [midi, end_time ] = normalized_timing(obj, offset)
+            midi = obj.full_midi;    
+            min_start_time = min(obj.full_midi(:,5));    
+            min_midi_event = min(obj.full_midi(:,7));
+            
+            for row = 1:size(midi,1)
+                midi(row,5) = midi(row,5) - min_start_time + offset;
+                midi(row,6) = midi(row,6) - min_start_time + offset;
+                midi(row,7) = midi(row,7) - min_midi_event;
+                midi(row,8) = midi(row,8) - min_midi_event;
+            end
+            
+            end_time = midi(end,6);
+        end   
     end 
 end
